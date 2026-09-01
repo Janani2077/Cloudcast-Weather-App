@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>CloudCast - Weather</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+```
+
+</head>
+
+<body>
+
+```
+<div class="container">
+
+    <h1>☁️ CloudCast</h1>
+
+    <p>
+        Real-Time Location-Aware Weather
+    </p>
+
+
+    <!-- ============================= -->
+    <!-- WEATHER SECTION -->
+    <!-- ============================= -->
+
+    <button
+        type="button"
+        onclick="getWeather()"
+    >
+        📍 Get My Weather
+    </button>
+
+
+    <div id="weather">
+
+        <p>
+            Click the button to get your current weather.
+        </p>
+
+    </div>
+
+
+    <hr>
+
+
+    <!-- ============================= -->
+    <!-- USER PREFERENCES -->
+    <!-- ============================= -->
+
+    <h2>⚙️ My Preferences</h2>
+
+
+    <label for="city">
+        Preferred City:
+    </label>
+
+    <br>
+
+    <input
+        type="text"
+        id="city"
+        placeholder="Enter your city"
+    >
+
+
+    <br><br>
+
+
+    <label for="unit">
+        Temperature Unit:
+    </label>
+
+    <br>
+
+    <select id="unit">
+
+        <option value="C">
+            Celsius (°C)
+        </option>
+
+        <option value="F">
+            Fahrenheit (°F)
+        </option>
+
+    </select>
+
+
+    <br><br>
+
+
+    <label for="alerts">
+        Weather Alerts:
+    </label>
+
+    <input
+        type="checkbox"
+        id="alerts"
+    >
+
+    <label for="alerts">
+        Enable Alerts
+    </label>
+
+
+    <br><br>
+
+
+    <!-- ============================= -->
+    <!-- EMAIL -->
+    <!-- ============================= -->
+
+    <label for="email">
+        Alert Email:
+    </label>
+
+    <br>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Enter your email"
+    >
+
+
+    <br><br>
+
+
+    <!-- ============================= -->
+    <!-- DAILY NOTIFICATION TIMES -->
+    <!-- ============================= -->
+
+    <label>
+        Daily Notification Times:
+    </label>
+
+    <br>
+
+    <div id="notificationTimes">
+
+        <div class="time-row">
+
+            <input
+                type="time"
+                class="notification-time"
+            >
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <button
+        type="button"
+        onclick="addNotificationTime()"
+    >
+        ➕ Add Another Time
+    </button>
+
+
+    <br><br>
+
+
+    <!-- ============================= -->
+    <!-- SAVE PREFERENCES -->
+    <!-- ============================= -->
+
+    <button
+        type="button"
+        onclick="savePreferences()"
+    >
+        💾 Save Preferences
+    </button>
+
+
+    <div id="preferenceMessage"></div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- JAVASCRIPT -->
+<!-- ============================= -->
+
+<script src="./script.js"></script>
+```
+
+</body>
+
+</html>
