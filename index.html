@@ -3,10 +3,9 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
 
 ```
-<meta charset="UTF-8">
-
 <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -25,174 +24,237 @@
 <body>
 
 ```
-<div class="container">
+<main class="container">
 
-    <h1>☁️ CloudCast</h1>
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
 
-    <p>
-        Real-Time Location-Aware Weather
-    </p>
+    <header class="header">
+        <div class="logo">☁️</div>
+
+        <h1>CloudCast</h1>
+
+        <p>
+            Real-Time Location-Aware Weather
+        </p>
+    </header>
 
 
     <!-- ============================= -->
     <!-- WEATHER SECTION -->
     <!-- ============================= -->
 
-    <button
-        type="button"
-        onclick="getWeather()"
-    >
-        📍 Get My Weather
-    </button>
+    <section class="weather-section">
+
+        <div class="section-heading">
+            <span class="section-icon">🌤️</span>
+
+            <div>
+                <h2>Current Weather</h2>
+                <p>Get weather information for your current location.</p>
+            </div>
+        </div>
+
+        <button
+            type="button"
+            class="primary-button"
+            onclick="getWeather()"
+        >
+            📍 Get My Weather
+        </button>
+
+        <div id="weather" class="weather-card">
+
+            <p>
+                Click the button above to get your current weather.
+            </p>
+
+        </div>
+
+    </section>
 
 
-    <div id="weather">
-
-        <p>
-            Click the button to get your current weather.
-        </p>
-
-    </div>
-
-
-    <hr>
+    <div class="divider"></div>
 
 
     <!-- ============================= -->
     <!-- USER PREFERENCES -->
     <!-- ============================= -->
 
-    <h2>⚙️ My Preferences</h2>
+    <section class="preferences-section">
+
+        <div class="section-heading">
+            <span class="section-icon">⚙️</span>
+
+            <div>
+                <h2>My Preferences</h2>
+                <p>Customize your CloudCast weather experience.</p>
+            </div>
+        </div>
 
 
-    <label for="city">
-        Preferred City:
-    </label>
+        <!-- CITY -->
 
-    <br>
+        <div class="form-group">
 
-    <input
-        type="text"
-        id="city"
-        placeholder="Enter your city"
-    >
-
-
-    <br><br>
-
-
-    <label for="unit">
-        Temperature Unit:
-    </label>
-
-    <br>
-
-    <select id="unit">
-
-        <option value="C">
-            Celsius (°C)
-        </option>
-
-        <option value="F">
-            Fahrenheit (°F)
-        </option>
-
-    </select>
-
-
-    <br><br>
-
-
-    <label for="alerts">
-        Weather Alerts:
-    </label>
-
-    <input
-        type="checkbox"
-        id="alerts"
-    >
-
-    <label for="alerts">
-        Enable Alerts
-    </label>
-
-
-    <br><br>
-
-
-    <!-- ============================= -->
-    <!-- EMAIL -->
-    <!-- ============================= -->
-
-    <label for="email">
-        Alert Email:
-    </label>
-
-    <br>
-
-    <input
-        type="email"
-        id="email"
-        placeholder="Enter your email"
-    >
-
-
-    <br><br>
-
-
-    <!-- ============================= -->
-    <!-- DAILY NOTIFICATION TIMES -->
-    <!-- ============================= -->
-
-    <label>
-        Daily Notification Times:
-    </label>
-
-    <br>
-
-    <div id="notificationTimes">
-
-        <div class="time-row">
+            <label for="city">
+                Preferred City
+            </label>
 
             <input
-                type="time"
-                class="notification-time"
+                type="text"
+                id="city"
+                placeholder="Enter your city"
             >
 
         </div>
 
-    </div>
+
+        <!-- TEMPERATURE UNIT -->
+
+        <div class="form-group">
+
+            <label for="unit">
+                Temperature Unit
+            </label>
+
+            <select id="unit">
+
+                <option value="C">
+                    Celsius (°C)
+                </option>
+
+                <option value="F">
+                    Fahrenheit (°F)
+                </option>
+
+            </select>
+
+        </div>
 
 
-    <br>
+        <!-- ALERTS -->
+
+        <div class="alert-setting">
+
+            <div>
+                <label for="alerts">
+                    Weather Alerts
+                </label>
+
+                <p>
+                    Receive daily weather updates by email.
+                </p>
+            </div>
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="alerts"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
 
 
-    <button
-        type="button"
-        onclick="addNotificationTime()"
-    >
-        ➕ Add Another Time
-    </button>
+        <!-- EMAIL -->
+
+        <div class="form-group">
+
+            <label for="email">
+                Alert Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+            >
+
+            <small>
+                Used only for your CloudCast weather notifications.
+            </small>
+
+        </div>
 
 
-    <br><br>
+        <!-- NOTIFICATION TIMES -->
+
+        <div class="notification-section">
+
+            <div class="notification-header">
+
+                <div>
+                    <label>
+                        Daily Notification Times
+                    </label>
+
+                    <p>
+                        Choose when you would like to receive your weather updates.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div id="notificationTimes">
+
+                <div class="time-row">
+
+                    <input
+                        type="time"
+                        class="notification-time"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="addNotificationTime()"
+            >
+                ➕ Add Another Time
+            </button>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <div class="save-section">
+
+            <button
+                type="button"
+                class="save-button"
+                onclick="savePreferences()"
+            >
+                💾 Save Preferences
+            </button>
+
+            <div id="preferenceMessage"></div>
+
+        </div>
+
+    </section>
 
 
     <!-- ============================= -->
-    <!-- SAVE PREFERENCES -->
+    <!-- FOOTER -->
     <!-- ============================= -->
 
-    <button
-        type="button"
-        onclick="savePreferences()"
-    >
-        💾 Save Preferences
-    </button>
+    <footer>
+        <p>CloudCast · Weather made simple.</p>
+    </footer>
 
-
-    <div id="preferenceMessage"></div>
-
-</div>
+</main>
 
 
 <!-- ============================= -->

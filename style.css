@@ -1,39 +1,735 @@
+/* ========================================
+GLOBAL
+======================================== */
+
+* {
+  box-sizing: border-box;
+  }
+
 body {
-    font-family: Arial, sans-serif;
-    background: #eaf6ff;
-    margin: 0;
-    padding: 0;
+margin: 0;
+min-height: 100vh;
+
+font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+background:
+    linear-gradient(
+        135deg,
+        #eaf6ff 0%,
+        #f5faff 50%,
+        #e7f2ff 100%
+    );
+
+color: #1f2937;
+
+padding: 40px 20px;
+
+
+}
+
+/* ========================================
+MAIN CONTAINER
+======================================== */
+
+.container {
+width: 100%;
+max-width: 620px;
+
+
+margin: 0 auto;
+
+background: #ffffff;
+
+padding: 42px;
+
+border-radius: 24px;
+
+box-shadow:
+    0 12px 35px rgba(25, 118, 210, 0.12);
+
+border: 1px solid #e5eef7;
+
+
+}
+
+/* ========================================
+HEADER
+======================================== */
+
+.header {
+text-align: center;
+
+
+margin-bottom: 35px;
+
+
+}
+
+.logo {
+width: 64px;
+height: 64px;
+
+
+margin: 0 auto 14px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+background: #eaf5ff;
+
+border-radius: 18px;
+
+font-size: 34px;
+
+
+}
+
+.header h1 {
+margin: 0;
+
+
+color: #1976d2;
+
+font-size: 34px;
+
+letter-spacing: -0.5px;
+
+
+}
+
+.header p {
+margin: 9px 0 0;
+
+
+color: #64748b;
+
+font-size: 15px;
+
+
+}
+
+/* ========================================
+SECTIONS
+======================================== */
+
+.weather-section,
+.preferences-section {
+width: 100%;
+}
+
+.section-heading {
+display: flex;
+
+
+align-items: flex-start;
+
+gap: 13px;
+
+margin-bottom: 22px;
+
+
+}
+
+.section-icon {
+width: 42px;
+height: 42px;
+
+
+flex-shrink: 0;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+background: #eef7ff;
+
+border-radius: 12px;
+
+font-size: 21px;
+
+
+}
+
+.section-heading h2 {
+margin: 1px 0 5px;
+
+
+font-size: 21px;
+
+color: #1e3a5f;
+
+
+}
+
+.section-heading p {
+margin: 0;
+
+
+color: #718096;
+
+font-size: 13px;
+
+line-height: 1.5;
+
+
+}
+
+/* ========================================
+BUTTONS
+======================================== */
+
+button {
+font-family: inherit;
+}
+
+.primary-button,
+.save-button,
+.secondary-button {
+border: none;
+
+
+border-radius: 11px;
+
+cursor: pointer;
+
+transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+
+
+}
+
+.primary-button {
+width: 100%;
+
+
+padding: 14px 20px;
+
+background: #1976d2;
+
+color: #ffffff;
+
+font-size: 15px;
+
+font-weight: 600;
+
+
+}
+
+.primary-button:hover {
+background: #1565b8;
+
+
+transform: translateY(-1px);
+
+box-shadow:
+    0 6px 15px rgba(25, 118, 210, 0.22);
+
+
+}
+
+/* ========================================
+WEATHER CARD
+======================================== */
+
+.weather-card {
+margin-top: 18px;
+
+
+min-height: 90px;
+
+padding: 20px;
+
+background: #f7fbff;
+
+border: 1px solid #dceeff;
+
+border-radius: 14px;
+
+text-align: center;
+
+color: #64748b;
+
+line-height: 1.7;
+
+
+}
+
+.weather-card h2 {
+margin: 0 0 12px;
+
+
+color: #1e3a5f;
+
+font-size: 21px;
+
+
+}
+
+.weather-card p {
+margin: 7px 0;
+
+
+font-size: 15px;
+
+
+}
+
+/* ========================================
+DIVIDER
+======================================== */
+
+.divider {
+height: 1px;
+
+
+background: #e7edf4;
+
+margin: 35px 0;
+
+
+}
+
+/* ========================================
+FORM
+======================================== */
+
+.form-group {
+margin-bottom: 23px;
+}
+
+.form-group label,
+.notification-section > label,
+.notification-header label,
+.alert-setting label {
+display: block;
+
+
+margin-bottom: 8px;
+
+color: #334155;
+
+font-size: 14px;
+
+font-weight: 600;
+
+
+}
+
+.form-group input,
+.form-group select,
+.notification-time {
+width: 100%;
+
+
+padding: 13px 14px;
+
+border: 1px solid #d5e0eb;
+
+border-radius: 10px;
+
+background: #ffffff;
+
+color: #1f2937;
+
+font-family: inherit;
+
+font-size: 14px;
+
+outline: none;
+
+transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.notification-time:focus {
+border-color: #1976d2;
+
+
+box-shadow:
+    0 0 0 3px rgba(25, 118, 210, 0.10);
+
+
+}
+
+.form-group input::placeholder {
+color: #a0aec0;
+}
+
+.form-group small {
+display: block;
+
+
+margin-top: 7px;
+
+color: #8a97a8;
+
+font-size: 12px;
+
+line-height: 1.4;
+
+
+}
+
+/* ========================================
+ALERT SETTING
+======================================== */
+
+.alert-setting {
+display: flex;
+
+
+align-items: center;
+
+justify-content: space-between;
+
+gap: 20px;
+
+padding: 16px;
+
+margin-bottom: 23px;
+
+background: #f8fbff;
+
+border: 1px solid #e1edf8;
+
+border-radius: 12px;
+
+
+}
+
+.alert-setting label {
+margin: 0;
+}
+
+.alert-setting p {
+margin: 5px 0 0;
+
+
+color: #7b8794;
+
+font-size: 12px;
+
+
+}
+
+/* ========================================
+TOGGLE SWITCH
+======================================== */
+
+.switch {
+position: relative;
+
+
+width: 48px;
+height: 26px;
+
+flex-shrink: 0;
+
+margin: 0 !important;
+
+
+}
+
+.switch input {
+opacity: 0;
+
+
+width: 0;
+height: 0;
+
+
+}
+
+.slider {
+position: absolute;
+
+
+inset: 0;
+
+background: #cbd5e1;
+
+border-radius: 30px;
+
+cursor: pointer;
+
+transition: 0.2s;
+
+
+}
+
+.slider::before {
+content: "";
+
+
+position: absolute;
+
+width: 20px;
+height: 20px;
+
+left: 3px;
+top: 3px;
+
+background: #ffffff;
+
+border-radius: 50%;
+
+box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.15);
+
+transition: 0.2s;
+
+
+}
+
+.switch input:checked + .slider {
+background: #1976d2;
+}
+
+.switch input:checked + .slider::before {
+transform: translateX(22px);
+}
+
+/* ========================================
+NOTIFICATION TIMES
+======================================== */
+
+.notification-section {
+margin-top: 5px;
+
+
+padding: 18px;
+
+background: #f8fbff;
+
+border: 1px solid #e1edf8;
+
+border-radius: 14px;
+
+
+}
+
+.notification-header {
+margin-bottom: 14px;
+}
+
+.notification-header label {
+margin-bottom: 5px;
+}
+
+.notification-header p {
+margin: 0;
+
+
+color: #7b8794;
+
+font-size: 12px;
+
+line-height: 1.5;
+
+
+}
+
+#notificationTimes {
+display: flex;
+
+
+flex-direction: column;
+
+gap: 10px;
+
+margin-bottom: 14px;
+
+
+}
+
+.time-row {
+display: flex;
+
+
+align-items: center;
+
+gap: 10px;
+
+
+}
+
+.time-row .notification-time {
+flex: 1;
+}
+
+.time-row button {
+flex-shrink: 0;
+
+
+padding: 11px 13px;
+
+border: none;
+
+border-radius: 9px;
+
+background: #fff0f0;
+
+color: #c62828;
+
+font-size: 12px;
+
+cursor: pointer;
+
+
+}
+
+.time-row button:hover {
+background: #ffe0e0;
+}
+
+.secondary-button {
+width: 100%;
+
+
+padding: 11px 16px;
+
+background: #eaf5ff;
+
+color: #1976d2;
+
+font-size: 13px;
+
+font-weight: 600;
+
+
+}
+
+.secondary-button:hover {
+background: #dceeff;
+}
+
+/* ========================================
+SAVE SECTION
+======================================== */
+
+.save-section {
+margin-top: 25px;
+}
+
+.save-button {
+width: 100%;
+
+padding: 14px 20px;
+
+background: #1976d2;
+
+color: #ffffff;
+
+font-size: 15px;
+
+font-weight: 600;
+
+
+}
+
+.save-button:hover {
+background: #1565b8;
+
+
+transform: translateY(-1px);
+
+box-shadow:
+    0 6px 15px rgba(25, 118, 210, 0.22);
+
+
+}
+
+#preferenceMessage {
+margin-top: 14px;
+
+text-align: center;
+
+font-size: 13px;
+
+line-height: 1.5;
+
+}
+
+#preferenceMessage p {
+margin: 0;
+}
+
+/* ========================================
+FOOTER
+======================================== */
+
+footer {
+margin-top: 32px;
+
+
+padding-top: 20px;
+
+border-top: 1px solid #edf1f5;
+
+text-align: center;
+
+
+}
+
+footer p {
+margin: 0;
+
+
+color: #94a3b8;
+
+font-size: 12px;
+
+
+}
+
+/* ========================================
+MOBILE RESPONSIVE
+======================================== */
+
+@media (max-width: 650px) {
+
+body {
+    padding: 20px 12px;
 }
 
 .container {
-    width: 400px;
-    margin: 100px auto;
-    text-align: center;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    padding: 28px 20px;
+
+    border-radius: 18px;
 }
 
-h1 {
-    color: #1976d2;
+.header h1 {
+    font-size: 29px;
 }
 
-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #1976d2;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+.section-heading h2 {
+    font-size: 19px;
 }
 
-button:hover {
-    background: #125aa0;
+.time-row {
+    align-items: stretch;
+
+    flex-direction: column;
 }
 
-#weather {
-    margin-top: 25px;
-    font-size: 18px;
+.time-row button {
+    width: 100%;
+}
+
+.alert-setting {
+    padding: 14px;
+}
+
+
 }
