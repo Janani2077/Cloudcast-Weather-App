@@ -1,339 +1,617 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <title>CloudCast - Weather</title>
 
-<title>CloudCast - Weather</title>
-
-<link
-    rel="stylesheet"
-    href="style.css"
->
-
-
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
-<main class="container">
+<main class="app-shell">
 
+    <!-- =========================================
+         NAVBAR
+    ========================================== -->
 
-<!-- ============================= -->
-<!-- HEADER -->
-<!-- ============================= -->
+    <header class="topbar">
 
-<header class="header">
+        <div class="brand">
 
-    <div class="logo">☁️</div>
+            <div class="brand-icon">
+                ☁
+            </div>
 
-    <h1>CloudCast</h1>
+            <div class="brand-text">
 
-    <p>
-        Real-Time Location-Aware Weather
-    </p>
+                <h1>CloudCast</h1>
 
-    <!-- ============================= -->
-    <!-- COGNITO LOGIN / SIGN UP -->
-    <!-- ============================= -->
+                <span>
+                    Personalized Weather Intelligence
+                </span>
 
-    <div id="authSection">
-
-        <button
-            type="button"
-            id="loginButton"
-            class="primary-button"
-            onclick="loginWithCognito()"
-        >
-            🔐 Login / Sign Up
-        </button>
-
-        <button
-            type="button"
-            id="logoutButton"
-            class="secondary-button"
-            onclick="logoutFromCognito()"
-            style="display: none;"
-        >
-            🚪 Logout
-        </button>
-
-        <p id="userStatus"></p>
-
-    </div>
-
-</header>
-
-
-<!-- ============================= -->
-<!-- WEATHER SECTION -->
-<!-- ============================= -->
-
-<section class="weather-section">
-
-    <div class="section-heading">
-
-        <span class="section-icon">🌤️</span>
-
-        <div>
-
-            <h2>Current Weather</h2>
-
-            <p>
-                Get weather information for your current location.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <button
-        type="button"
-        class="primary-button"
-        onclick="getWeather()"
-    >
-        📍 Get My Weather
-    </button>
-
-
-    <div
-        id="weather"
-        class="weather-card"
-    >
-
-        <p>
-            Click the button above to get your current weather.
-        </p>
-
-    </div>
-
-</section>
-
-
-<div class="divider"></div>
-
-
-<!-- ============================= -->
-<!-- USER PREFERENCES -->
-<!-- ============================= -->
-
-<section class="preferences-section">
-
-    <div class="section-heading">
-
-        <span class="section-icon">⚙️</span>
-
-        <div>
-
-            <h2>My Preferences</h2>
-
-            <p>
-                Customize your CloudCast weather experience.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ============================= -->
-    <!-- CITY -->
-    <!-- ============================= -->
-
-    <div class="form-group">
-
-        <label for="city">
-            Preferred City
-        </label>
-
-        <input
-            type="text"
-            id="city"
-            placeholder="Enter your city"
-        >
-
-    </div>
-
-
-    <!-- ============================= -->
-    <!-- TEMPERATURE UNIT -->
-    <!-- ============================= -->
-
-    <div class="form-group">
-
-        <label for="unit">
-            Temperature Unit
-        </label>
-
-        <select id="unit">
-
-            <option value="C">
-                Celsius (°C)
-            </option>
-
-            <option value="F">
-                Fahrenheit (°F)
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <!-- ============================= -->
-    <!-- ALERTS -->
-    <!-- ============================= -->
-
-    <div class="alert-setting">
-
-        <div>
-
-            <label for="alerts">
-                Weather Alerts
-            </label>
-
-            <p>
-                Receive daily weather updates by email.
-            </p>
+            </div>
 
         </div>
 
 
-        <label class="switch">
+        <div class="topbar-right">
 
-            <input
-                type="checkbox"
-                id="alerts"
+            <div class="live-status">
+                <span class="live-dot"></span>
+                Live
+            </div>
+
+
+            <div
+                id="authSection"
+                class="auth-area"
             >
 
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-
-    <!-- ============================= -->
-    <!-- EMAIL -->
-    <!-- ============================= -->
-
-    <div class="form-group">
-
-        <label for="email">
-            Alert Email
-        </label>
-
-        <input
-            type="email"
-            id="email"
-            placeholder="Enter your email"
-        >
-
-        <small>
-            Used only for your CloudCast weather notifications.
-        </small>
-
-    </div>
+                <button
+                    type="button"
+                    id="loginButton"
+                    class="login-button"
+                    onclick="loginWithCognito()"
+                >
+                    🔐 Login / Sign Up
+                </button>
 
 
-    <!-- ============================= -->
-    <!-- NOTIFICATION TIMES -->
-    <!-- ============================= -->
+                <div
+                    id="userStatus"
+                    class="user-status"
+                ></div>
 
-    <div class="notification-section">
 
-        <div class="notification-header">
+                <button
+                    type="button"
+                    id="logoutButton"
+                    class="logout-button"
+                    onclick="logoutFromCognito()"
+                    style="display: none;"
+                >
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <div class="container">
+
+
+        <!-- =====================================
+             HERO
+        ====================================== -->
+
+        <section class="hero">
 
             <div>
 
-                <label>
-                    Daily Notification Times
-                </label>
+                <div class="greeting">
+                    Good afternoon, <strong>Divya</strong>
+                </div>
 
-                <p>
-                    Choose when you would like to receive your
-                    weather updates.
+                <p class="hero-subtitle">
+                    Your personalized weather dashboard
                 </p>
 
             </div>
 
-        </div>
 
+            <div class="location-status">
 
-        <div id="notificationTimes">
+                <span class="location-pin">
+                    📍
+                </span>
 
-            <div class="time-row">
+                <span id="locationText">
+                    Location unavailable
+                </span>
 
-                <input
-                    type="time"
-                    class="notification-time"
-                >
+                <span class="status-separator">
+                    •
+                </span>
+
+                <span class="updated-text">
+                    <span class="updated-dot"></span>
+                    <span id="updatedText">
+                        Waiting for weather
+                    </span>
+                </span>
 
             </div>
 
-        </div>
+        </section>
 
 
-        <button
-            type="button"
-            class="secondary-button"
-            onclick="addNotificationTime()"
-        >
-            ➕ Add Another Time
-        </button>
+        <!-- =====================================
+             WEATHER SECTION
+        ====================================== -->
+
+        <section class="weather-section">
+
+            <div class="weather-card-wrapper">
+
+                <div
+                    id="weather"
+                    class="weather-card"
+                >
+
+                    <div class="weather-empty">
+
+                        <div class="empty-weather-icon">
+                            ☁️
+                        </div>
+
+                        <h2>
+                            Current Weather
+                        </h2>
+
+                        <p>
+                            Click the button below to get your current weather.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            onclick="getWeather()"
+                        >
+                            📍 Get My Weather
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             QUICK WEATHER METRICS
+             NO DUMMY DATA
+        ====================================== -->
+
+        <section class="metrics-grid">
+
+            <!-- TEMPERATURE -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon temperature-icon">
+                    🌡️
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        TEMPERATURE
+                    </span>
+
+                    <strong id="metricTemperature">
+                        --
+                    </strong>
+
+                    <small id="metricTemperatureInfo">
+                        Waiting for weather data
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- HUMIDITY -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon humidity-icon">
+                    💧
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        HUMIDITY
+                    </span>
+
+                    <strong id="metricHumidity">
+                        --
+                    </strong>
+
+                    <small id="metricHumidityInfo">
+                        Waiting for weather data
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- WIND -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon wind-icon">
+                    🌬️
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        WIND SPEED
+                    </span>
+
+                    <strong id="metricWind">
+                        --
+                    </strong>
+
+                    <small id="metricWindInfo">
+                        Waiting for weather data
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONDITION -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon condition-icon">
+                    🌤️
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        CONDITION
+                    </span>
+
+                    <strong id="metricCondition">
+                        --
+                    </strong>
+
+                    <small id="metricConditionInfo">
+                        Waiting for weather data
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             AI RECOMMENDATION
+             SEPARATE FULL-WIDTH CARD
+        ====================================== -->
+
+        <section class="dashboard-grid">
+
+            <div class="dashboard-card ai-card">
+
+                <div class="dashboard-card-header">
+
+                    <div class="dashboard-title-group">
+
+                        <div class="small-card-icon">
+                            ✨
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                CloudCast AI Recommendation
+                            </h3>
+
+                            <span>
+                                Personalized weather-based advice
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="ai-badge">
+                        AI
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="aiRecommendation"
+                    class="ai-content"
+                >
+
+                    <h4 id="aiRecommendationTitle">
+                        Weather recommendation unavailable
+                    </h4>
+
+                    <p id="aiRecommendationText">
+                        Get your current weather to receive a personalized
+                        recommendation.
+                    </p>
+
+                </div>
+
+
+                <div class="insight-footer">
+
+                    <span class="insight-dot"></span>
+
+                    <span id="aiRecommendationFooter">
+                        Waiting for live weather data
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             PREFERENCES
+        ====================================== -->
+
+        <section class="preferences-section">
+
+
+            <div class="preferences-header">
+
+                <div class="preferences-title">
+
+                    <div class="preferences-icon">
+                        ⚙
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Weather Preferences
+                        </h2>
+
+                        <p>
+                            Configure your personalized weather settings
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="preferences-body">
+
+
+                <!-- LOCATION -->
+
+                <div class="preference-group">
+
+                    <label for="city">
+                        Preferred City
+                    </label>
+
+                    <input
+                        type="text"
+                        id="city"
+                        placeholder="Enter your city"
+                    >
+
+                </div>
+
+
+                <!-- UNIT -->
+
+                <div class="preference-group">
+
+                    <label>
+                        Temperature Unit
+                    </label>
+
+                    <div class="unit-selector">
+
+                        <select id="unit">
+
+                            <option value="C">
+                                Celsius °C
+                            </option>
+
+                            <option value="F">
+                                Fahrenheit °F
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="preference-group">
+
+                    <label for="email">
+                        Alert Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                    >
+
+                </div>
+
+
+                <!-- WEATHER ALERT -->
+
+                <div class="preference-group alert-group">
+
+                    <div>
+
+                        <label>
+                            Weather Alerts
+                        </label>
+
+                        <span>
+                            Receive severe weather notifications
+                        </span>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="alerts"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- NOTIFICATION TIMES
+                     KEPT BECAUSE THEY ARE USED
+                     FOR USER PREFERENCES / ALERTS -->
+
+                <div class="notification-section">
+
+                    <div class="notification-header">
+
+                        <div>
+
+                            <label>
+                                Notification Times
+                            </label>
+
+                            <p>
+                                Choose when you would like to receive
+                                your weather updates.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="notificationTimes">
+
+                        <div class="time-row">
+
+                            <input
+                                type="time"
+                                class="notification-time"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="add-time-button"
+                        onclick="addNotificationTime()"
+                    >
+                        + Add time
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SAVE -->
+
+            <div class="save-section">
+
+                <button
+                    type="button"
+                    class="save-button"
+                    onclick="savePreferences()"
+                >
+                    Save Preferences
+                </button>
+
+                <div
+                    id="preferenceMessage"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             FOOTER
+        ====================================== -->
+
+        <footer>
+
+            <div class="footer-brand">
+
+                <div class="footer-icon">
+                    ☁
+                </div>
+
+                <div>
+
+                    <strong>
+                        CloudCast
+                    </strong>
+
+                    <span>
+                        Location-Aware Personalized Weather
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-right">
+                AWS · OpenWeather
+            </div>
+
+        </footer>
 
     </div>
-
-
-    <!-- ============================= -->
-    <!-- SAVE -->
-    <!-- ============================= -->
-
-    <div class="save-section">
-
-        <button
-            type="button"
-            class="save-button"
-            onclick="savePreferences()"
-        >
-            💾 Save Preferences
-        </button>
-
-        <div id="preferenceMessage"></div>
-
-    </div>
-
-</section>
-
-
-<!-- ============================= -->
-<!-- FOOTER -->
-<!-- ============================= -->
-
-<footer>
-
-    <p>
-        CloudCast · Weather made simple.
-    </p>
-
-</footer>
-
 
 </main>
 
-<!-- ============================= -->
-
-<!-- JAVASCRIPT -->
-
-<!-- ============================= -->
 
 <script src="./script.js"></script>
 

@@ -19,12 +19,6 @@ const COGNITO_REDIRECT_URI =
 // ========================================
 // USER ID
 // ========================================
-//
-// USER_ID is no longer hardcoded.
-//
-// It will be filled automatically from
-// the Cognito user's "sub" value.
-//
 
 let USER_ID = null;
 
@@ -146,16 +140,6 @@ function decodeJwt(token) {
 // ========================================
 // LOGIN WITH COGNITO
 // ========================================
-//
-// PKCE is used here.
-//
-// The code verifier is generated BEFORE
-// redirecting to Cognito and stored in
-// localStorage.
-//
-// The callback later retrieves the same
-// verifier and sends it to /oauth2/token.
-//
 
 async function loginWithCognito() {
 
@@ -164,25 +148,13 @@ async function loginWithCognito() {
     );
 
 
-    // ========================================
-    // CREATE OAUTH STATE
-    // ========================================
-
     const state =
         crypto.randomUUID();
 
 
-    // ========================================
-    // CREATE PKCE CODE VERIFIER
-    // ========================================
-
     const codeVerifier =
         generateRandomString(64);
 
-
-    // ========================================
-    // CREATE PKCE CODE CHALLENGE
-    // ========================================
 
     const hashedVerifier =
         await sha256(codeVerifier);
@@ -193,33 +165,17 @@ async function loginWithCognito() {
         );
 
 
-    // ========================================
-    // SAVE STATE
-    // ========================================
-
     localStorage.setItem(
         "cloudcast_oauth_state",
         state
     );
 
 
-    // ========================================
-    // SAVE PKCE CODE VERIFIER
-    // ========================================
-
     localStorage.setItem(
         "cloudcast_code_verifier",
         codeVerifier
     );
 
-    console.log(
-        "PKCE code verifier saved."
-    );
-
-
-    // ========================================
-    // CREATE COGNITO AUTHORIZE URL
-    // ========================================
 
     const authorizeUrl =
         COGNITO_DOMAIN +
@@ -247,15 +203,6 @@ async function loginWithCognito() {
         ) +
         "&code_challenge_method=S256";
 
-
-    console.log(
-        "Redirecting to Cognito..."
-    );
-
-
-    // ========================================
-    // REDIRECT TO COGNITO
-    // ========================================
 
     window.location.href =
         authorizeUrl;
@@ -377,15 +324,6 @@ async function handleCognitoCallback() {
     }
 
 
-    console.log(
-        "Cognito authorization code received."
-    );
-
-
-    // ========================================
-    // VALIDATE OAUTH STATE
-    // ========================================
-
     const savedState =
         localStorage.getItem(
             "cloudcast_oauth_state"
@@ -412,10 +350,6 @@ async function handleCognitoCallback() {
 
     try {
 
-        // ========================================
-        // GET PKCE CODE VERIFIER
-        // ========================================
-
         const codeVerifier =
             localStorage.getItem(
                 "cloudcast_code_verifier"
@@ -430,11 +364,6 @@ async function handleCognitoCallback() {
 
         }
 
-
-        // ========================================
-        // EXCHANGE AUTHORIZATION CODE
-        // FOR TOKENS
-        // ========================================
 
         const tokenResponse =
             await fetch(
@@ -479,12 +408,6 @@ async function handleCognitoCallback() {
             await tokenResponse.json();
 
 
-        console.log(
-            "Cognito token response:",
-            tokenData
-        );
-
-
         if (!tokenResponse.ok) {
 
             throw new Error(
@@ -499,10 +422,6 @@ async function handleCognitoCallback() {
 
         }
 
-
-        // ========================================
-        // STORE TOKENS
-        // ========================================
 
         ID_TOKEN =
             tokenData.id_token;
@@ -523,10 +442,6 @@ async function handleCognitoCallback() {
         );
 
 
-        // ========================================
-        // REMOVE TEMPORARY OAUTH DATA
-        // ========================================
-
         localStorage.removeItem(
             "cloudcast_oauth_state"
         );
@@ -537,20 +452,12 @@ async function handleCognitoCallback() {
         );
 
 
-        // ========================================
-        // REMOVE ?code=... FROM URL
-        // ========================================
-
         window.history.replaceState(
             {},
             document.title,
             COGNITO_REDIRECT_URI
         );
 
-
-        // ========================================
-        // DECODE ID TOKEN
-        // ========================================
 
         const payload =
             decodeJwt(ID_TOKEN);
@@ -568,23 +475,9 @@ async function handleCognitoCallback() {
         }
 
 
-        // ========================================
-        // SET USER ID
-        // ========================================
-
         USER_ID =
             payload.sub;
 
-
-        console.log(
-            "Cognito USER_ID:",
-            USER_ID
-        );
-
-
-        // ========================================
-        // UPDATE AUTH UI
-        // ========================================
 
         updateAuthUI(
             payload
@@ -626,10 +519,6 @@ async function initializeCognito() {
     );
 
 
-    // ========================================
-    // CHECK COGNITO REDIRECT
-    // ========================================
-
     const urlParams =
         new URLSearchParams(
             window.location.search
@@ -650,15 +539,10 @@ async function initializeCognito() {
 
         }
 
-
         return;
 
     }
 
-
-    // ========================================
-    // CHECK EXISTING LOGIN
-    // ========================================
 
     const tokens =
         getStoredTokens();
@@ -666,24 +550,14 @@ async function initializeCognito() {
 
     if (!tokens) {
 
-        console.log(
-            "No Cognito login found."
-        );
-
-
         updateAuthUI(
             null
         );
-
 
         return;
 
     }
 
-
-    // ========================================
-    // DECODE STORED TOKEN
-    // ========================================
 
     const payload =
         decodeJwt(
@@ -696,27 +570,16 @@ async function initializeCognito() {
         !payload.sub
     ) {
 
-        console.log(
-            "Stored Cognito token is invalid."
-        );
-
-
         clearCognitoSession();
-
 
         updateAuthUI(
             null
         );
 
-
         return;
 
     }
 
-
-    // ========================================
-    // CHECK TOKEN EXPIRATION
-    // ========================================
 
     const currentTime =
         Math.floor(
@@ -729,44 +592,25 @@ async function initializeCognito() {
         payload.exp <= currentTime
     ) {
 
-        console.log(
-            "Cognito ID token expired."
-        );
-
-
         clearCognitoSession();
-
 
         updateAuthUI(
             null
         );
-
 
         return;
 
     }
 
 
-    // ========================================
-    // RESTORE SESSION
-    // ========================================
-
     ID_TOKEN =
         tokens.idToken;
-
 
     ACCESS_TOKEN =
         tokens.accessToken;
 
-
     USER_ID =
         payload.sub;
-
-
-    console.log(
-        "Existing Cognito user:",
-        USER_ID
-    );
 
 
     updateAuthUI(
@@ -822,7 +666,6 @@ function updateAuthUI(payload) {
         loginButton.style.display =
             "none";
 
-
         logoutButton.style.display =
             "inline-block";
 
@@ -850,10 +693,8 @@ function updateAuthUI(payload) {
         loginButton.style.display =
             "inline-block";
 
-
         logoutButton.style.display =
             "none";
-
 
         userStatus.textContent =
             "Please login to use your CloudCast account.";
@@ -873,16 +714,13 @@ function clearCognitoSession() {
         "cloudcast_id_token"
     );
 
-
     localStorage.removeItem(
         "cloudcast_access_token"
     );
 
-
     localStorage.removeItem(
         "cloudcast_oauth_state"
     );
-
 
     localStorage.removeItem(
         "cloudcast_code_verifier"
@@ -892,10 +730,8 @@ function clearCognitoSession() {
     USER_ID =
         null;
 
-
     ID_TOKEN =
         null;
-
 
     ACCESS_TOKEN =
         null;
@@ -976,11 +812,6 @@ async function loadPreferences() {
 
     if (!USER_ID) {
 
-        console.log(
-            "No Cognito user logged in."
-        );
-
-
         return;
 
     }
@@ -1013,20 +844,8 @@ async function loadPreferences() {
             );
 
 
-        console.log(
-            "Preferences response status:",
-            response.status
-        );
-
-
         const data =
             await response.json();
-
-
-        console.log(
-            "Preferences API response:",
-            data
-        );
 
 
         if (!response.ok) {
@@ -1043,19 +862,11 @@ async function loadPreferences() {
             data.preferences;
 
 
-        // ========================================
-        // LOAD CITY
-        // ========================================
-
         document.getElementById(
             "city"
         ).value =
             preferences.city || "";
 
-
-        // ========================================
-        // LOAD TEMPERATURE UNIT
-        // ========================================
 
         document.getElementById(
             "unit"
@@ -1063,29 +874,17 @@ async function loadPreferences() {
             preferences.unit || "C";
 
 
-        // ========================================
-        // LOAD ALERTS SETTING
-        // ========================================
-
         document.getElementById(
             "alerts"
         ).checked =
             preferences.alerts === true;
 
 
-        // ========================================
-        // LOAD EMAIL
-        // ========================================
-
         document.getElementById(
             "email"
         ).value =
             preferences.email || "";
 
-
-        // ========================================
-        // LOAD NOTIFICATION TIMES
-        // ========================================
 
         const notificationContainer =
             document.getElementById(
@@ -1163,11 +962,6 @@ function addNotificationTime(
     value = ""
 ) {
 
-    console.log(
-        "Add Another Time button clicked"
-    );
-
-
     const container =
         document.getElementById(
             "notificationTimes"
@@ -1175,11 +969,6 @@ function addNotificationTime(
 
 
     if (!container) {
-
-        console.error(
-            "notificationTimes element not found."
-        );
-
 
         return;
 
@@ -1205,10 +994,8 @@ function addNotificationTime(
     input.type =
         "time";
 
-
     input.className =
         "notification-time";
-
 
     input.value =
         value;
@@ -1222,7 +1009,6 @@ function addNotificationTime(
 
     removeButton.type =
         "button";
-
 
     removeButton.textContent =
         "❌ Remove";
@@ -1242,7 +1028,6 @@ function addNotificationTime(
         input
     );
 
-
     row.appendChild(
         removeButton
     );
@@ -1251,6 +1036,337 @@ function addNotificationTime(
     container.appendChild(
         row
     );
+
+}
+
+
+// ========================================
+// UPDATE WEATHER METRICS
+// ========================================
+
+function updateWeatherMetrics(
+    data,
+    temperature,
+    unitSymbol
+) {
+
+    const temperatureElement =
+        document.getElementById(
+            "metricTemperature"
+        );
+
+    const temperatureInfo =
+        document.getElementById(
+            "metricTemperatureInfo"
+        );
+
+    const humidityElement =
+        document.getElementById(
+            "metricHumidity"
+        );
+
+    const humidityInfo =
+        document.getElementById(
+            "metricHumidityInfo"
+        );
+
+    const windElement =
+        document.getElementById(
+            "metricWind"
+        );
+
+    const windInfo =
+        document.getElementById(
+            "metricWindInfo"
+        );
+
+    const conditionElement =
+        document.getElementById(
+            "metricCondition"
+        );
+
+    const conditionInfo =
+        document.getElementById(
+            "metricConditionInfo"
+        );
+
+
+    /*
+     * Temperature
+     */
+
+    temperatureElement.textContent =
+        temperature +
+        unitSymbol;
+
+    temperatureInfo.textContent =
+        "Current temperature";
+
+
+    /*
+     * Humidity
+     */
+
+    if (
+        data.humidity !== undefined &&
+        data.humidity !== null
+    ) {
+
+        humidityElement.textContent =
+            data.humidity +
+            "%";
+
+        humidityInfo.textContent =
+            getHumidityDescription(
+                Number(data.humidity)
+            );
+
+    } else {
+
+        humidityElement.textContent =
+            "--";
+
+        humidityInfo.textContent =
+            "Data unavailable";
+
+    }
+
+
+    /*
+     * Wind
+     */
+
+    if (
+        data.wind_speed !== undefined &&
+        data.wind_speed !== null
+    ) {
+
+        windElement.textContent =
+            data.wind_speed +
+            " m/s";
+
+        windInfo.textContent =
+            getWindDescription(
+                Number(data.wind_speed)
+            );
+
+    } else {
+
+        windElement.textContent =
+            "--";
+
+        windInfo.textContent =
+            "Data unavailable";
+
+    }
+
+
+    /*
+     * Weather condition
+     */
+
+    if (
+        data.weather
+    ) {
+
+        conditionElement.textContent =
+            data.weather;
+
+        conditionInfo.textContent =
+            "Current condition";
+
+    } else {
+
+        conditionElement.textContent =
+            "--";
+
+        conditionInfo.textContent =
+            "Data unavailable";
+
+    }
+
+}
+
+
+// ========================================
+// HUMIDITY DESCRIPTION
+// ========================================
+
+function getHumidityDescription(
+    humidity
+) {
+
+    if (Number.isNaN(humidity)) {
+
+        return "Humidity data";
+
+    }
+
+    if (humidity < 40) {
+
+        return "Low moisture level";
+
+    }
+
+    if (humidity < 70) {
+
+        return "Comfortable moisture level";
+
+    }
+
+    if (humidity < 85) {
+
+        return "High moisture level";
+
+    }
+
+    return "Very high moisture level";
+
+}
+
+
+// ========================================
+// WIND DESCRIPTION
+// ========================================
+
+function getWindDescription(
+    speed
+) {
+
+    if (Number.isNaN(speed)) {
+
+        return "Wind data";
+
+    }
+
+    if (speed < 1) {
+
+        return "Calm conditions";
+
+    }
+
+    if (speed < 4) {
+
+        return "Light breeze";
+
+    }
+
+    if (speed < 8) {
+
+        return "Moderate breeze";
+
+    }
+
+    if (speed < 12) {
+
+        return "Strong breeze";
+
+    }
+
+    return "Strong winds";
+
+}
+
+
+// ========================================
+// UPDATE AI RECOMMENDATION
+// ========================================
+
+function updateAIRecommendation(
+    recommendation,
+    weather
+) {
+
+    const titleElement =
+        document.getElementById(
+            "aiRecommendationTitle"
+        );
+
+    const textElement =
+        document.getElementById(
+            "aiRecommendationText"
+        );
+
+    const footerElement =
+        document.getElementById(
+            "aiRecommendationFooter"
+        );
+
+
+    if (!recommendation) {
+
+        titleElement.textContent =
+            "AI recommendation unavailable";
+
+        textElement.textContent =
+            "CloudCast could not generate a recommendation from the current weather data.";
+
+        footerElement.textContent =
+            "AI recommendation unavailable";
+
+        return;
+
+    }
+
+
+    /*
+     * Keep the complete recommendation
+     * returned by the backend.
+     *
+     * If the backend sends a single sentence,
+     * display it directly.
+     */
+
+    const cleanRecommendation =
+        String(
+            recommendation
+        ).trim();
+
+
+    /*
+     * Use the first sentence as the
+     * recommendation heading when possible.
+     */
+
+    const sentenceMatch =
+        cleanRecommendation.match(
+            /^(.+?[.!?])(?:\s|$)/
+        );
+
+
+    if (
+        sentenceMatch &&
+        sentenceMatch[1].length <= 100
+    ) {
+
+        titleElement.textContent =
+            sentenceMatch[1];
+
+        const remainingText =
+            cleanRecommendation
+                .slice(
+                    sentenceMatch[1].length
+                )
+                .trim();
+
+
+        textElement.textContent =
+            remainingText ||
+            cleanRecommendation;
+
+    } else {
+
+        titleElement.textContent =
+            "Personalized weather advice";
+
+        textElement.textContent =
+            cleanRecommendation;
+
+    }
+
+
+    footerElement.textContent =
+        "Generated from current weather conditions";
 
 }
 
@@ -1272,7 +1388,6 @@ function getWeather() {
             "Please login to CloudCast first."
         );
 
-
         return;
 
     }
@@ -1284,7 +1399,6 @@ function getWeather() {
             "weather"
         ).innerHTML =
             "<p>Geolocation is not supported by your browser.</p>";
-
 
         return;
 
@@ -1304,21 +1418,8 @@ function getWeather() {
             const latitude =
                 position.coords.latitude;
 
-
             const longitude =
                 position.coords.longitude;
-
-
-            console.log(
-                "Latitude:",
-                latitude
-            );
-
-
-            console.log(
-                "Longitude:",
-                longitude
-            );
 
 
             document.getElementById(
@@ -1354,20 +1455,8 @@ function getWeather() {
                     );
 
 
-                console.log(
-                    "Weather response status:",
-                    response.status
-                );
-
-
                 const data =
                     await response.json();
-
-
-                console.log(
-                    "Weather API response:",
-                    data
-                );
 
 
                 if (!response.ok) {
@@ -1394,7 +1483,6 @@ function getWeather() {
 
                 let temperature;
 
-
                 let unitSymbol;
 
 
@@ -1416,10 +1504,8 @@ function getWeather() {
                             1
                         );
 
-
                     unitSymbol =
                         "°F";
-
 
                 } else {
 
@@ -1428,12 +1514,15 @@ function getWeather() {
                             1
                         );
 
-
                     unitSymbol =
                         "°C";
 
                 }
 
+
+                /*
+                 * Main weather card
+                 */
 
                 document.getElementById(
                     "weather"
@@ -1461,6 +1550,68 @@ function getWeather() {
                     " m/s</p>";
 
 
+                /*
+                 * Update location in hero
+                 */
+
+                const locationText =
+                    document.getElementById(
+                        "locationText"
+                    );
+
+                if (locationText) {
+
+                    locationText.textContent =
+                        data.location ||
+                        "Current location";
+
+                }
+
+
+                /*
+                 * Update timestamp
+                 */
+
+                const updatedText =
+                    document.getElementById(
+                        "updatedText"
+                    );
+
+                if (updatedText) {
+
+                    updatedText.textContent =
+                        "Updated just now";
+
+                }
+
+
+                /*
+                 * Update the four
+                 * weather metric cards
+                 */
+
+                updateWeatherMetrics(
+                    data,
+                    temperature,
+                    unitSymbol
+                );
+
+
+                /*
+                 * Update AI recommendation
+                 */
+
+                updateAIRecommendation(
+                    data.ai_recommendation,
+                    data
+                );
+
+
+                console.log(
+                    "Weather data displayed successfully."
+                );
+
+
             } catch (error) {
 
                 console.error(
@@ -1478,6 +1629,20 @@ function getWeather() {
                     "<p>" +
                     error.message +
                     "</p>";
+
+
+                /*
+                 * Do not leave dummy data
+                 * in the metric cards.
+                 */
+
+                resetWeatherMetrics();
+
+
+                updateAIRecommendation(
+                    null,
+                    null
+                );
 
             }
 
@@ -1500,9 +1665,96 @@ function getWeather() {
 
                 "<p>Please allow location access in your browser.</p>";
 
+
+            resetWeatherMetrics();
+
+
+            updateAIRecommendation(
+                null,
+                null
+            );
+
         }
 
     );
+
+}
+
+
+// ========================================
+// RESET WEATHER METRICS
+// ========================================
+
+function resetWeatherMetrics() {
+
+    document.getElementById(
+        "metricTemperature"
+    ).textContent =
+        "--";
+
+    document.getElementById(
+        "metricTemperatureInfo"
+    ).textContent =
+        "Weather data unavailable";
+
+
+    document.getElementById(
+        "metricHumidity"
+    ).textContent =
+        "--";
+
+    document.getElementById(
+        "metricHumidityInfo"
+    ).textContent =
+        "Weather data unavailable";
+
+
+    document.getElementById(
+        "metricWind"
+    ).textContent =
+        "--";
+
+    document.getElementById(
+        "metricWindInfo"
+    ).textContent =
+        "Weather data unavailable";
+
+
+    document.getElementById(
+        "metricCondition"
+    ).textContent =
+        "--";
+
+    document.getElementById(
+        "metricConditionInfo"
+    ).textContent =
+        "Weather data unavailable";
+
+
+    const locationText =
+        document.getElementById(
+            "locationText"
+        );
+
+    if (locationText) {
+
+        locationText.textContent =
+            "Location unavailable";
+
+    }
+
+
+    const updatedText =
+        document.getElementById(
+            "updatedText"
+        );
+
+    if (updatedText) {
+
+        updatedText.textContent =
+            "Waiting for weather";
+
+    }
 
 }
 
@@ -1524,7 +1776,6 @@ async function savePreferences() {
             "Please login to CloudCast before saving preferences."
         );
 
-
         return;
 
     }
@@ -1535,24 +1786,20 @@ async function savePreferences() {
             "city"
         );
 
-
     const unitElement =
         document.getElementById(
             "unit"
         );
-
 
     const alertsElement =
         document.getElementById(
             "alerts"
         );
 
-
     const emailElement =
         document.getElementById(
             "email"
         );
-
 
     const message =
         document.getElementById(
@@ -1572,7 +1819,6 @@ async function savePreferences() {
             "One or more preference elements are missing from HTML."
         );
 
-
         return;
 
     }
@@ -1581,22 +1827,19 @@ async function savePreferences() {
     const city =
         cityElement.value.trim();
 
-
     const unit =
         unitElement.value;
 
-
     const alerts =
         alertsElement.checked;
-
 
     const email =
         emailElement.value.trim();
 
 
-    // ========================================
-    // GET NOTIFICATION TIMES
-    // ========================================
+    /*
+     * GET NOTIFICATION TIMES
+     */
 
     const timeInputs =
         document.querySelectorAll(
@@ -1625,9 +1868,9 @@ async function savePreferences() {
     );
 
 
-    // ========================================
-    // REMOVE DUPLICATE TIMES
-    // ========================================
+    /*
+     * REMOVE DUPLICATES
+     */
 
     const uniqueNotificationTimes =
         [
@@ -1637,9 +1880,9 @@ async function savePreferences() {
         ];
 
 
-    // ========================================
-    // GET USER TIMEZONE
-    // ========================================
+    /*
+     * GET USER TIMEZONE
+     */
 
     const timezone =
         Intl.DateTimeFormat()
@@ -1647,21 +1890,9 @@ async function savePreferences() {
             .timeZone;
 
 
-    console.log(
-        "Notification times:",
-        uniqueNotificationTimes
-    );
-
-
-    console.log(
-        "Timezone:",
-        timezone
-    );
-
-
-    // ========================================
-    // VALIDATION
-    // ========================================
+    /*
+     * VALIDATION
+     */
 
     if (
         city === ""
@@ -1669,7 +1900,6 @@ async function savePreferences() {
 
         message.innerHTML =
             "<p>❌ Please enter your preferred city.</p>";
-
 
         return;
 
@@ -1684,7 +1914,6 @@ async function savePreferences() {
         message.innerHTML =
             "<p>❌ Please enter an email for weather alerts.</p>";
 
-
         return;
 
     }
@@ -1698,7 +1927,6 @@ async function savePreferences() {
         message.innerHTML =
             "<p>❌ Please select at least one notification time.</p>";
 
-
         return;
 
     }
@@ -1707,10 +1935,6 @@ async function savePreferences() {
     message.innerHTML =
         "<p>💾 Saving preferences...</p>";
 
-
-    // ========================================
-    // SAVE TO AWS
-    // ========================================
 
     try {
 
@@ -1726,11 +1950,6 @@ async function savePreferences() {
 
                     body:
                         JSON.stringify({
-
-                            /*
-                             * Cognito's unique "sub"
-                             * becomes the DynamoDB userId.
-                             */
 
                             userId:
                                 USER_ID,
@@ -1759,20 +1978,8 @@ async function savePreferences() {
             );
 
 
-        console.log(
-            "Preference response status:",
-            response.status
-        );
-
-
         const data =
             await response.json();
-
-
-        console.log(
-            "Preference API response:",
-            data
-        );
 
 
         if (!response.ok) {
