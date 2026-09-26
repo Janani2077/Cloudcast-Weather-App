@@ -1524,30 +1524,19 @@ function getWeather() {
                  * Main weather card
                  */
 
+                const locationLabel =
+                    data.state ?
+                        data.location + "," + data.state :
+                        data.location;
+
+
                 document.getElementById(
                     "weather"
                 ).innerHTML =
 
                     "<h2>📍 " +
-                    data.location +
-                    "</h2>" +
-
-                    "<p>🌡️ Temperature: " +
-                    temperature +
-                    unitSymbol +
-                    "</p>" +
-
-                    "<p>💧 Humidity: " +
-                    data.humidity +
-                    "%</p>" +
-
-                    "<p>🌧️ Weather: " +
-                    data.weather +
-                    "</p>" +
-
-                    "<p>💨 Wind Speed: " +
-                    data.wind_speed +
-                    " m/s</p>";
+                    locationLabel +
+                    "</h2>";
 
 
                 /*
