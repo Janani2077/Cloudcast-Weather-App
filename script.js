@@ -13,7 +13,7 @@ const COGNITO_CLIENT_ID =
     "6dt2rm01l39q773itr7p00la48";
 
 const COGNITO_REDIRECT_URI =
-    "http://127.0.0.1:5500/index.html";
+    "https://cloudcast-weather-app.vercel.app/";
 
 
 // ========================================
